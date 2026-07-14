@@ -177,10 +177,9 @@ def cashout_popup(reward):
         "Cash Out 성공!"
     )
 
-    st.write(
-        f"획득 칩 : {reward}칩"
-    )
-
+    st.success(
+        f"💰 획득 칩 : {reward}칩"
+    )    
 
     if st.button(
         "🔄 다시 플레이하기"
