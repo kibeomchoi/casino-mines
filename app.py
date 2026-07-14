@@ -151,20 +151,46 @@ status = game.get_status()
 # =====================================================
 # 팝업 함수
 # =====================================================
-
-
 @st.dialog("🎉 SUCCESS")
 def cashout_popup(reward):
 
-    st.success("🎉 Cash Out 성공!")
-
     st.markdown(
-        f"""
-        ### 💰 획득 칩 : {reward}칩
         """
+        <div style="
+            background-color:#222;
+            padding:25px;
+            border-radius:15px;
+            text-align:center;
+        ">
+            <h1 style="
+                color:#FFD700;
+                font-size:40px;
+            ">
+            🎉 SUCCESS
+            </h1>
+
+            <p style="
+                color:white;
+                font-size:25px;
+                font-weight:bold;
+            ">
+            Cash Out 성공!
+            </p>
+
+            <p style="
+                color:#FFD700;
+                font-size:30px;
+                font-weight:bold;
+            ">
+            획득 칩 : """ + str(reward) + """칩
+            </p>
+
+        </div>
+        """,
+
+        unsafe_allow_html=True
     )
 
-    st.write("")
 
     if st.button(
         "🔄 다시 플레이하기",
@@ -176,21 +202,48 @@ def cashout_popup(reward):
         st.session_state.show_cashout = False
 
         st.rerun()
-
-
-
 @st.dialog("💥 GAME OVER")
 def game_over_popup():
 
-    st.error("💥 폭탄을 발견했습니다!")
-
     st.markdown(
         """
-        ### 게임 종료
-        """
+        <div style="
+            background-color:#222;
+            padding:25px;
+            border-radius:15px;
+            text-align:center;
+        ">
+
+            <h1 style="
+                color:#FF4444;
+                font-size:40px;
+            ">
+            💥 GAME OVER
+            </h1>
+
+
+            <p style="
+                color:white;
+                font-size:25px;
+                font-weight:bold;
+            ">
+            폭탄을 발견했습니다!
+            </p>
+
+
+            <p style="
+                color:white;
+                font-size:20px;
+            ">
+            이번 게임은 종료되었습니다.
+            </p>
+
+        </div>
+        """,
+
+        unsafe_allow_html=True
     )
 
-    st.write("")
 
     if st.button(
         "🔄 다시 플레이하기",
