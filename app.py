@@ -27,7 +27,20 @@ st.set_page_config(
 # =====================================================
 # CSS
 # =====================================================
+st.markdown(
+"""
+<style>
+.stApp {
+    background-color:#050505;
+}
+</style>
+""",
+unsafe_allow_html=True
+)
 
+div.stButton > button {
+    font-size:20px;
+}
 
 # =====================================================
 # Session State
