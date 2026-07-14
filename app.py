@@ -1,19 +1,3 @@
-"""
-=====================================================
-Casino Mines - Streamlit App
-
-사용자 화면(UI)을 담당하는 파일
-
-game.py:
-    게임 로직
-
-app.py:
-    화면 / 버튼 / 입력 담당
-
-=====================================================
-"""
-
-
 import streamlit as st
 
 from game import Game
@@ -25,7 +9,6 @@ from config import (
     PAYOUTS,
     MIN_CASHOUT,
 )
-
 
 
 # =====================================================
@@ -41,7 +24,7 @@ st.set_page_config(
 
 
 # =====================================================
-# 카지노 스타일
+# CSS
 # =====================================================
 
 st.markdown(
@@ -56,7 +39,6 @@ st.markdown(
     h1 {
         color: gold;
         text-align: center;
-        font-size: 45px;
     }
 
 
@@ -72,31 +54,39 @@ st.markdown(
 
     div.stButton > button {
 
-        width: 100%;
+        background-color: #222;
+        color: white;
+
+        border: 2px solid gold;
+        border-radius: 10px;
+
         height: 55px;
 
-        font-size: 25px;
+        font-size: 20px;
         font-weight: bold;
-
-        border-radius: 12px;
 
     }
 
 
-    </style>
+    div.stButton > button:hover {
 
+        background-color: #444;
+        color: gold;
+
+    }
+
+    </style>
     """,
+
     unsafe_allow_html=True
 )
 
 
 
 # =====================================================
-# Session State 초기화
+# 게임 초기화
 # =====================================================
 
-
-# 게임 객체 저장
 
 if "game" not in st.session_state:
 
@@ -104,26 +94,10 @@ if "game" not in st.session_state:
 
 
 
-# 이번 판 베팅 금액
-
 if "bet_amount" not in st.session_state:
 
     st.session_state.bet_amount = 100
 
-
-
-
-# =====================================================
-# 제목
-# =====================================================
-
-st.title(TITLE)
-
-
-
-# =====================================================
-# 게임 상태
-# =====================================================
 
 
 game = st.session_state.game
@@ -133,7 +107,43 @@ status = game.get_status()
 
 
 # =====================================================
-# 상단 정보 표시
+# 제목
+# =====================================================
+
+
+st.title(TITLE)
+
+
+
+# =====================================================
+# 게임 설명
+# =====================================================
+
+
+with st.expander(
+    "📖 게임 방법 (클릭해서 보기)",
+    expanded=True
+):
+
+    st.markdown(
+        """
+        💎 **보석을 찾을수록 배율이 증가합니다.**
+
+        🔥 더 많은 보석을 찾을수록 더 높은 보상을 받을 수 있습니다.
+
+        💰 **보석 5개 이상 발견 시 Cash Out 가능**
+
+        💣 **폭탄 발견 시 즉시 게임 종료**
+
+        🎯 목표:
+        최대한 높은 배율에서 안전하게 Cash Out 하세요!
+        """
+    )
+
+
+
+# =====================================================
+# 현재 정보
 # =====================================================
 
 
@@ -145,7 +155,7 @@ with col1:
 
     st.metric(
         "💰 이번 베팅",
-        f"{st.session_state.bet_amount} 칩"
+        f"{st.session_state.bet_amount}칩"
     )
 
 
@@ -163,27 +173,57 @@ with col3:
         "🔥 배율",
         f"{status['multiplier']}x"
     )
+
+
+
 # =====================================================
-# 베팅 금액 설정
+# Cash Out 가능 알림
 # =====================================================
 
 
-st.divider()
+if status["gems_found"] >= MIN_CASHOUT and not game.game_over:
 
-st.subheader("🎲 베팅 설정")
-
-
-bet = st.number_input(
-    "이번 게임에 걸 칩",
-    min_value=100,
-    step=100,
-    value=st.session_state.bet_amount
-)
+    st.success(
+        "🎉 Cash Out 가능! "
+        "계속 도전하면 더 높은 배율을 얻을 수 있습니다."
+    )
 
 
-# 입력값 저장
 
-st.session_state.bet_amount = int(bet)
+# =====================================================
+# 베팅 설정
+# =====================================================
+
+
+if (
+    not game.game_over
+    and status["gems_found"] == 0
+):
+
+
+    bet = st.number_input(
+
+        "🎲 이번 게임 베팅",
+
+        min_value=100,
+
+        step=100,
+
+        value=st.session_state.bet_amount
+
+    )
+
+
+    st.session_state.bet_amount = int(bet)
+
+
+
+else:
+
+
+    st.info(
+        f"현재 베팅: {st.session_state.bet_amount}칩"
+    )
 
 
 
@@ -194,7 +234,8 @@ st.session_state.bet_amount = int(bet)
 
 st.divider()
 
-st.subheader("💎 Mines Board")
+st.subheader("💎 Mines")
+
 
 
 board = game.get_board_state()
@@ -203,7 +244,7 @@ board = game.get_board_state()
 
 for row in range(ROWS):
 
-    columns = st.columns(COLS)
+    cols = st.columns(COLS)
 
 
     for col in range(COLS):
@@ -211,21 +252,14 @@ for row in range(ROWS):
         cell = board[row][col]
 
 
-        # 기본 표시
-
         symbol = "⬜"
 
 
-
-        # 열린 칸 표시
-
         if cell["open"]:
-
 
             if cell["bomb"]:
 
                 symbol = "💣"
-
 
             elif cell["gem"]:
 
@@ -233,18 +267,16 @@ for row in range(ROWS):
 
 
 
-        # 아직 안 연 칸
-
         if not cell["open"]:
 
 
-            clicked = columns[col].button(
+            if cols[col].button(
+
                 "⬜",
-                key=f"cell_{row}_{col}"
-            )
 
+                key=f"{row}_{col}"
 
-            if clicked:
+            ):
 
 
                 result = game.click_cell(
@@ -253,111 +285,72 @@ for row in range(ROWS):
                 )
 
 
-
-                # 폭탄이면 공개
-
                 if result["result"] == "bomb":
 
                     game.reveal_all()
-
 
 
                 st.rerun()
 
 
 
-        # 열린 칸
-
         else:
 
 
-            columns[col].button(
+            cols[col].button(
+
                 symbol,
-                key=f"open_{row}_{col}",
-                disabled=True
+
+                disabled=True,
+
+                key=f"open_{row}_{col}"
+
             )
 
 
 
 # =====================================================
-# 게임 결과 표시
+# 다음 배율
 # =====================================================
-
-
-if game.game_over:
-
-
-    if game.cashed_out:
-
-        st.success(
-            "🎉 Cash Out 완료!"
-        )
-
-
-    else:
-
-        st.error(
-            "💥 폭탄을 밟았습니다!"
-        )
-# =====================================================
-# 다음 배율 안내
-# =====================================================
-
-st.divider()
-
-st.subheader("📈 다음 보석 배율")
 
 
 next_gem = status["gems_found"] + 1
 
 
-from config import PAYOUTS
-
 
 if next_gem in PAYOUTS:
 
     st.info(
+
         f"💎 {next_gem}개 성공 시 → "
         f"{PAYOUTS[next_gem]}x"
-    )
 
-else:
-
-    st.info(
-        "더 높은 보석 개수에 도전하세요!"
     )
 
 
 
 # =====================================================
-# 예상 획득 금액
+# Cash Out
 # =====================================================
 
-estimated_reward = int(
+
+current_reward = int(
+
     st.session_state.bet_amount
     *
     status["multiplier"]
+
 )
-
-
-st.subheader("💰 현재 획득 가능")
 
 
 st.write(
-    f"Cash Out 시 "
-    f"**{estimated_reward} 칩** 획득"
+    f"💰 현재 Cash Out 금액: **{current_reward}칩**"
 )
 
 
 
-# =====================================================
-# Cash Out 버튼
-# =====================================================
-
-
 if st.button(
-    "💰 Cash Out",
-    key="cashout"
+    "💰 Cash Out"
 ):
 
 
@@ -379,6 +372,7 @@ if st.button(
 
     else:
 
+
         st.warning(
             f"💎 보석 {MIN_CASHOUT}개 이상 필요합니다."
         )
@@ -386,7 +380,7 @@ if st.button(
 
 
 # =====================================================
-# 게임 종료 처리
+# 결과
 # =====================================================
 
 
@@ -395,22 +389,21 @@ if game.game_over:
 
     if game.cashed_out:
 
-
         st.success(
-            "🎉 안전하게 Cash Out 성공!"
+            "🎉 안전하게 Cash Out 완료!"
         )
 
 
     else:
 
         st.error(
-            "💥 폭탄 발견! 실패!"
+            "💣 폭탄 발견! 게임 종료!"
         )
 
 
 
 # =====================================================
-# 새 게임 버튼
+# 새 게임
 # =====================================================
 
 
@@ -418,8 +411,7 @@ st.divider()
 
 
 if st.button(
-    "🔄 다음 게임 시작",
-    key="reset_game"
+    "🔄 다음 게임 시작"
 ):
 
 
