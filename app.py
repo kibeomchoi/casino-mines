@@ -38,9 +38,6 @@ st.markdown(
 unsafe_allow_html=True
 )
 
-div.stButton > button {
-    font-size:20px;
-}
 
 # =====================================================
 # Session State
