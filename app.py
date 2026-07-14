@@ -28,70 +28,6 @@ st.set_page_config(
 # CSS
 # =====================================================
 
-st.markdown(
-    """
-    <style>
-
-    .stApp {
-
-        background-color:#0b0b0b;
-
-    }
-
-
-
-
-    div.stButton > button {
-
-        background-color:#222;
-
-        color:white;
-
-        border:2px solid gold;
-
-        border-radius:12px;
-
-        height:65px;
-
-        font-size:24px;
-
-        font-weight:bold;
-
-    }
-
-
-
-    div.stButton > button:hover {
-
-        background-color:#444;
-
-        color:gold;
-
-    }
-
-
-
-    /* dialog 내부 */
-
-
-
-    div[data-testid="stDialog"] p {
-
-        color:white !important;
-
-        font-size:22px;
-
-    }
-
-
-
-    </style>
-    """,
-
-    unsafe_allow_html=True
-)
-
-
 
 # =====================================================
 # Session State
@@ -140,30 +76,9 @@ status = game.get_status()
 @st.dialog("💥 GAME OVER")
 def game_over_popup():
 
-    st.markdown(
-        """
-        <style>
-
-        [data-testid="stDialog"] {
-            background-color: #111111;
-        }
-
-        [data-testid="stDialog"] p {
-            color: white !important;
-            font-size: 25px !important;
-            font-weight: bold !important;
-        }
-
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-
     st.error(
-        "💥 폭탄을 발견했습니다!"
+        "폭탄을 발견했습니다!"
     )
-
 
     st.write(
         "이번 게임은 종료되었습니다."
@@ -171,8 +86,7 @@ def game_over_popup():
 
 
     if st.button(
-        "🔄 다시 플레이하기",
-        use_container_width=True
+        "🔄 다시 플레이하기"
     ):
 
         st.session_state.game = Game()
@@ -183,35 +97,17 @@ def game_over_popup():
 @st.dialog("🎉 SUCCESS")
 def cashout_popup(reward):
 
-    st.markdown(
-        """
-        <style>
-
-        [data-testid="stDialog"] p {
-            color: white !important;
-            font-size: 25px !important;
-            font-weight: bold !important;
-        }
-
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-
     st.success(
-        "🎉 Cash Out 성공!"
+        "Cash Out 성공!"
     )
-
 
     st.write(
-        f"💰 획득 칩 : {reward}칩"
+        f"획득 칩 : {reward}칩"
     )
 
 
     if st.button(
-        "🔄 다시 플레이하기",
-        use_container_width=True
+        "🔄 다시 플레이하기"
     ):
 
         st.session_state.game = Game()
