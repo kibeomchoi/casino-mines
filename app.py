@@ -33,53 +33,79 @@ st.markdown(
     <style>
 
     .stApp {
-        background-color: #0b0b0b;
+
+        background-color:#0b0b0b;
+
     }
 
 
     h1 {
-        color: gold;
-        text-align: center;
-        font-size: 45px;
+
+        color:gold;
+        text-align:center;
+
     }
 
 
-    h2, h3 {
-        color: white;
+    h2,h3,p {
+
+        color:white;
+
     }
 
-
-    p {
-        color: white;
-    }
 
 
     div.stButton > button {
 
-        background-color: #222;
+        background-color:#222;
 
-        color: white;
+        color:white;
 
-        border: 2px solid gold;
+        border:2px solid gold;
 
-        border-radius: 12px;
+        border-radius:12px;
 
-        height: 65px;
+        height:65px;
 
-        font-size: 24px;
+        font-size:24px;
 
-        font-weight: bold;
+        font-weight:bold;
 
     }
+
 
 
     div.stButton > button:hover {
 
-        background-color: #444;
+        background-color:#444;
 
-        color: gold;
+        color:gold;
 
     }
+
+
+
+    /* dialog 내부 */
+
+    div[data-testid="stDialog"] h1 {
+
+        color:gold !important;
+
+        text-align:center;
+
+        font-size:40px;
+
+    }
+
+
+    div[data-testid="stDialog"] p {
+
+        color:white !important;
+
+        font-size:22px;
+
+    }
+
 
 
     </style>
@@ -91,7 +117,7 @@ st.markdown(
 
 
 # =====================================================
-# Session State 초기화
+# Session State
 # =====================================================
 
 
@@ -129,40 +155,35 @@ game = st.session_state.game
 
 status = game.get_status()
 
+
+
 # =====================================================
-# 결과 팝업 UI
+# 팝업 함수
 # =====================================================
 
 
-def result_popup(title, message, button_text):
+@st.dialog("💥 GAME OVER")
+def game_over_popup():
+
 
     st.markdown(
-        f"""
-        <div style="
-            background-color:#111;
-            border:4px solid gold;
-            border-radius:20px;
-            padding:30px;
-            text-align:center;
-            margin:20px 0;
+        """
+        <h2 style="
+        text-align:center;
+        color:white;
         ">
-
-        <h1 style="color:gold;">
-        {title}
-        </h1>
-
-        <h3 style="color:white;">
-        {message}
-        </h3>
-
-        </div>
+        폭탄을 발견했습니다!
+        </h2>
         """,
         unsafe_allow_html=True
     )
 
 
+    st.write("")
+
+
     if st.button(
-        button_text,
+        "🔄 다시 플레이하기",
         use_container_width=True
     ):
 
@@ -170,9 +191,49 @@ def result_popup(title, message, button_text):
 
         st.session_state.show_game_over = False
 
+        st.rerun()
+
+
+
+@st.dialog("🎉 SUCCESS")
+def cashout_popup(reward):
+
+
+    st.markdown(
+        f"""
+        <h2 style="
+        text-align:center;
+        color:white;
+        ">
+        Cash Out 성공!
+        </h2>
+
+
+        <h2 style="
+        text-align:center;
+        color:gold;
+        ">
+        획득 칩 : {reward}칩
+        </h2>
+        """,
+
+        unsafe_allow_html=True
+    )
+
+
+    if st.button(
+        "🔄 다시 플레이하기",
+        use_container_width=True
+    ):
+
+
+        st.session_state.game = Game()
+
         st.session_state.show_cashout = False
 
         st.rerun()
+
+
 
 # =====================================================
 # 제목
@@ -184,7 +245,7 @@ st.title(TITLE)
 
 
 # =====================================================
-# 게임 설명
+# 룰 설명
 # =====================================================
 
 
@@ -195,16 +256,13 @@ with st.expander(
 
     st.markdown(
         """
-        💎 보석을 찾을수록 배율이 증가합니다.
+        💎 보석을 찾으면 배율이 증가합니다.
 
-        🔥 더 높은 배율에 도전할수록 더 큰 보상을 받을 수 있습니다.
+        💰 보석 5개 이상 발견 시 Cash Out 가능!
 
-        💰 보석 5개 이상 발견 시 Cash Out 가능합니다.
+        💣 폭탄을 발견하면 즉시 게임 종료.
 
-        💣 폭탄을 발견하면 즉시 게임 종료!
-
-        🎯 목표:
-        최대한 높은 배율에서 안전하게 Cash Out 하세요.
+        🎯 높은 배율에서 안전하게 Cash Out 하세요.
         """
     )
 # =====================================================
@@ -253,24 +311,32 @@ st.divider()
 
 
 st.write(
+
     f"현재 진행 : 💎 {status['gems_found']}개 발견 | "
     f"🔥 {status['multiplier']}x"
+
 )
 
 
 
 # =====================================================
-# Cash Out 가능 알림
+# Cash Out 가능 표시
 # =====================================================
 
 
 if (
+
     status["gems_found"] >= MIN_CASHOUT
+
     and not game.game_over
+
 ):
 
+
     st.success(
+
         "🎉 Cash Out 가능!"
+
     )
 
 
@@ -346,6 +412,7 @@ for row in range(ROWS):
                 )
 
 
+
                 if result["result"] == "bomb":
 
 
@@ -398,7 +465,7 @@ if next_gem in PAYOUTS:
 
     )
 # =====================================================
-# 현재 Cash Out 금액
+# Cash Out 금액 표시
 # =====================================================
 
 
@@ -442,7 +509,7 @@ if st.button(
     if game.can_cash_out():
 
 
-        result = game.cash_out(
+        game.cash_out(
 
             st.session_state.bet_amount
 
@@ -476,28 +543,14 @@ if st.button(
 
 if st.session_state.show_game_over:
 
-
-    result_popup(
-
-        "💥 GAME OVER",
-
-        "폭탄을 발견했습니다!",
-
-        "🔄 다시 플레이하기"
-
-    )
+    game_over_popup()
 
 
 
 if st.session_state.show_cashout:
 
+    cashout_popup(
 
-    result_popup(
-
-        "🎉 SUCCESS",
-
-        f"획득 칩 : {st.session_state.cashout_reward}칩",
-
-        "🔄 다시 플레이하기"
+        st.session_state.cashout_reward
 
     )
