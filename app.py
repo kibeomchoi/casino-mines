@@ -1,176 +1,435 @@
 """
-app.py
+=====================================================
+Casino Mines - Streamlit App
 
-Casino Mines Streamlit UI
+사용자 화면(UI)을 담당하는 파일
 
-게임 화면을 담당한다.
-게임 로직은 game.py에서 처리한다.
+game.py:
+    게임 로직
+
+app.py:
+    화면 / 버튼 / 입력 담당
+
+=====================================================
 """
+
 
 import streamlit as st
 
 from game import Game
 
+from config import (
+    TITLE,
+    ROWS,
+    COLS,
+)
 
-# --------------------------------------------------
+
+
+# =====================================================
 # 페이지 설정
-# --------------------------------------------------
+# =====================================================
 
 st.set_page_config(
     page_title="Casino Mines",
-    page_icon="💎",
+    page_icon="🎰",
     layout="centered"
 )
 
 
-# --------------------------------------------------
-# 게임 생성
-# --------------------------------------------------
 
-def create_game():
+# =====================================================
+# 카지노 스타일
+# =====================================================
+
+st.markdown(
     """
-    새로운 Game 객체 생성
-    """
+    <style>
 
-    return Game()
-
-
-# --------------------------------------------------
-# Session 관리
-# --------------------------------------------------
-
-def get_game():
-    """
-    현재 게임 반환.
-
-    Streamlit rerun 때문에
-    session_state 사용.
-    """
-
-    if "game" not in st.session_state:
-        st.session_state.game = create_game()
-
-    return st.session_state.game
+    .stApp {
+        background-color: #0b0b0b;
+    }
 
 
-# --------------------------------------------------
-# 게임 리셋
-# --------------------------------------------------
-
-def reset_game():
-    """
-    새 게임 시작
-    """
-
-    st.session_state.game = create_game()
+    h1 {
+        color: gold;
+        text-align: center;
+        font-size: 45px;
+    }
 
 
-# --------------------------------------------------
-# 메인 화면
-# --------------------------------------------------
-
-def main():
-
-    game = get_game()
-
-    st.title("💎 Casino Mines")
-
-    st.divider()
-
-    # 상태 표시
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.metric(
-            "보석",
-            f"{game.get_gems()}개"
-        )
-
-    with col2:
-        st.metric(
-            "배율",
-            f"{game.get_multiplier()}x"
-        )
+    h2, h3 {
+        color: white;
+    }
 
 
-    st.divider()
+    p {
+        color: white;
+    }
 
 
-    # 보드 출력
+    div.stButton > button {
 
-    for row in range(5):
+        width: 100%;
+        height: 55px;
 
-        cols = st.columns(5)
+        font-size: 25px;
+        font-weight: bold;
 
-        for col in range(5):
+        border-radius: 12px;
 
-            with cols[col]:
+    }
 
-                state = game.get_cell_state(
+
+    </style>
+
+    """,
+    unsafe_allow_html=True
+)
+
+
+
+# =====================================================
+# Session State 초기화
+# =====================================================
+
+
+# 게임 객체 저장
+
+if "game" not in st.session_state:
+
+    st.session_state.game = Game()
+
+
+
+# 이번 판 베팅 금액
+
+if "bet_amount" not in st.session_state:
+
+    st.session_state.bet_amount = 100
+
+
+
+
+# =====================================================
+# 제목
+# =====================================================
+
+st.title(TITLE)
+
+
+
+# =====================================================
+# 게임 상태
+# =====================================================
+
+
+game = st.session_state.game
+
+status = game.get_status()
+
+
+
+# =====================================================
+# 상단 정보 표시
+# =====================================================
+
+
+col1, col2, col3 = st.columns(3)
+
+
+
+with col1:
+
+    st.metric(
+        "💰 이번 베팅",
+        f"{st.session_state.bet_amount} 칩"
+    )
+
+
+with col2:
+
+    st.metric(
+        "💎 보석",
+        f"{status['gems_found']}개"
+    )
+
+
+with col3:
+
+    st.metric(
+        "🔥 배율",
+        f"{status['multiplier']}x"
+    )
+# =====================================================
+# 베팅 금액 설정
+# =====================================================
+
+
+st.divider()
+
+st.subheader("🎲 베팅 설정")
+
+
+bet = st.number_input(
+    "이번 게임에 걸 칩",
+    min_value=100,
+    step=100,
+    value=st.session_state.bet_amount
+)
+
+
+# 입력값 저장
+
+st.session_state.bet_amount = bet
+
+
+
+# =====================================================
+# 게임판
+# =====================================================
+
+
+st.divider()
+
+st.subheader("💎 Mines Board")
+
+
+board = game.get_board_state()
+
+
+
+for row in range(ROWS):
+
+    columns = st.columns(COLS)
+
+
+    for col in range(COLS):
+
+        cell = board[row][col]
+
+
+        # 기본 표시
+
+        symbol = "⬜"
+
+
+
+        # 열린 칸 표시
+
+        if cell["open"]:
+
+
+            if cell["bomb"]:
+
+                symbol = "💣"
+
+
+            elif cell["gem"]:
+
+                symbol = "💎"
+
+
+
+        # 아직 안 연 칸
+
+        if not cell["open"]:
+
+
+            clicked = columns[col].button(
+                "⬜",
+                key=f"cell_{row}_{col}"
+            )
+
+
+            if clicked:
+
+
+                result = game.click_cell(
                     row,
                     col
                 )
 
-                if state == "hidden":
-
-                    if st.button(
-                        "⬜",
-                        key=f"{row}_{col}"
-                    ):
-
-                        game.reveal(
-                            row,
-                            col
-                        )
-
-                        st.rerun()
-
-                elif state == "gem":
-
-                    st.button(
-                        "💎",
-                        key=f"{row}_{col}",
-                        disabled=True
-                    )
-
-                elif state == "bomb":
-
-                    st.button(
-                        "💣",
-                        key=f"{row}_{col}",
-                        disabled=True
-                    )
 
 
-    st.divider()
+                # 폭탄이면 공개
+
+                if result["result"] == "bomb":
+
+                    game.reveal_all()
 
 
-    # Cash Out
 
-    if game.can_cash_out():
+                st.rerun()
 
-        if st.button("💰 Cash Out"):
 
-            reward = game.cash_out()
 
-            st.success(
-                f"성공! {reward}배 획득"
+        # 열린 칸
+
+        else:
+
+
+            columns[col].button(
+                symbol,
+                key=f"open_{row}_{col}",
+                disabled=True
             )
 
-            st.rerun()
 
 
-    # 새 게임
-
-    if st.button("🔄 New Game"):
-
-        reset_game()
-
-        st.rerun()
+# =====================================================
+# 게임 결과 표시
+# =====================================================
 
 
+if game.game_over:
 
-if __name__ == "__main__":
 
-    main()
+    if game.cashed_out:
+
+        st.success(
+            "🎉 Cash Out 완료!"
+        )
+
+
+    else:
+
+        st.error(
+            "💥 폭탄을 밟았습니다!"
+        )
+# =====================================================
+# 베팅 금액 설정
+# =====================================================
+
+
+st.divider()
+
+st.subheader("🎲 베팅 설정")
+
+
+bet = st.number_input(
+    "이번 게임에 걸 칩",
+    min_value=100,
+    step=100,
+    value=st.session_state.bet_amount
+)
+
+
+# 입력값 저장
+
+st.session_state.bet_amount = bet
+
+
+
+# =====================================================
+# 게임판
+# =====================================================
+
+
+st.divider()
+
+st.subheader("💎 Mines Board")
+
+
+board = game.get_board_state()
+
+
+
+for row in range(ROWS):
+
+    columns = st.columns(COLS)
+
+
+    for col in range(COLS):
+
+        cell = board[row][col]
+
+
+        # 기본 표시
+
+        symbol = "⬜"
+
+
+
+        # 열린 칸 표시
+
+        if cell["open"]:
+
+
+            if cell["bomb"]:
+
+                symbol = "💣"
+
+
+            elif cell["gem"]:
+
+                symbol = "💎"
+
+
+
+        # 아직 안 연 칸
+
+        if not cell["open"]:
+
+
+            clicked = columns[col].button(
+                "⬜",
+                key=f"cell_{row}_{col}"
+            )
+
+
+            if clicked:
+
+
+                result = game.click_cell(
+                    row,
+                    col
+                )
+
+
+
+                # 폭탄이면 공개
+
+                if result["result"] == "bomb":
+
+                    game.reveal_all()
+
+
+
+                st.rerun()
+
+
+
+        # 열린 칸
+
+        else:
+
+
+            columns[col].button(
+                symbol,
+                key=f"open_{row}_{col}",
+                disabled=True
+            )
+
+
+
+# =====================================================
+# 게임 결과 표시
+# =====================================================
+
+
+if game.game_over:
+
+
+    if game.cashed_out:
+
+        st.success(
+            "🎉 Cash Out 완료!"
+        )
+
+
+    else:
+
+        st.error(
+            "💥 폭탄을 밟았습니다!"
+        )
