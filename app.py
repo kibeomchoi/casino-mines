@@ -22,6 +22,8 @@ from config import (
     TITLE,
     ROWS,
     COLS,
+    PAYOUTS,
+    MIN_CASHOUT,
 )
 
 
@@ -297,3 +299,130 @@ if game.game_over:
         st.error(
             "💥 폭탄을 밟았습니다!"
         )
+# =====================================================
+# 다음 배율 안내
+# =====================================================
+
+st.divider()
+
+st.subheader("📈 다음 보석 배율")
+
+
+next_gem = status["gems_found"] + 1
+
+
+from config import PAYOUTS
+
+
+if next_gem in PAYOUTS:
+
+    st.info(
+        f"💎 {next_gem}개 성공 시 → "
+        f"{PAYOUTS[next_gem]}x"
+    )
+
+else:
+
+    st.info(
+        "더 높은 보석 개수에 도전하세요!"
+    )
+
+
+
+# =====================================================
+# 예상 획득 금액
+# =====================================================
+
+estimated_reward = int(
+    st.session_state.bet_amount
+    *
+    status["multiplier"]
+)
+
+
+st.subheader("💰 현재 획득 가능")
+
+
+st.write(
+    f"Cash Out 시 "
+    f"**{estimated_reward} 칩** 획득"
+)
+
+
+
+# =====================================================
+# Cash Out 버튼
+# =====================================================
+
+
+if st.button(
+    "💰 Cash Out",
+    key="cashout"
+):
+
+
+    if game.can_cash_out():
+
+
+        result = game.cash_out(
+            st.session_state.bet_amount
+        )
+
+
+        st.success(
+            result["message"]
+        )
+
+
+        st.rerun()
+
+
+    else:
+
+        st.warning(
+            f"💎 보석 {MIN_CASHOUT}개 이상 필요합니다."
+        )
+
+
+
+# =====================================================
+# 게임 종료 처리
+# =====================================================
+
+
+if game.game_over:
+
+
+    if game.cashed_out:
+
+
+        st.success(
+            "🎉 안전하게 Cash Out 성공!"
+        )
+
+
+    else:
+
+        st.error(
+            "💥 폭탄 발견! 실패!"
+        )
+
+
+
+# =====================================================
+# 새 게임 버튼
+# =====================================================
+
+
+st.divider()
+
+
+if st.button(
+    "🔄 다음 게임 시작",
+    key="reset_game"
+):
+
+
+    st.session_state.game = Game()
+
+    st.rerun()
