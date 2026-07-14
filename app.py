@@ -129,60 +129,50 @@ game = st.session_state.game
 
 status = game.get_status()
 
-
-
 # =====================================================
-# 팝업 함수
+# 결과 팝업 UI
 # =====================================================
 
 
-@st.dialog("💥 GAME OVER")
-def game_over_popup():
+def result_popup(title, message, button_text):
 
-    st.error(
-        "폭탄을 발견했습니다!"
-    )
+    st.markdown(
+        f"""
+        <div style="
+            background-color:#111;
+            border:4px solid gold;
+            border-radius:20px;
+            padding:30px;
+            text-align:center;
+            margin:20px 0;
+        ">
 
+        <h1 style="color:gold;">
+        {title}
+        </h1>
 
-    st.write(
-        "이번 게임은 종료되었습니다."
+        <h3 style="color:white;">
+        {message}
+        </h3>
+
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
 
     if st.button(
-        "🔄 다시 플레이하기",
+        button_text,
         use_container_width=True
     ):
 
         st.session_state.game = Game()
 
-        st.rerun()
+        st.session_state.show_game_over = False
 
-
-
-@st.dialog("🎉 SUCCESS")
-def cashout_popup(reward):
-
-    st.success(
-        "안전하게 Cash Out 성공!"
-    )
-
-
-    st.write(
-        f"획득 칩 : **{reward}칩**"
-    )
-
-
-    if st.button(
-        "🔄 다시 플레이하기",
-        use_container_width=True
-    ):
-
-        st.session_state.game = Game()
+        st.session_state.show_cashout = False
 
         st.rerun()
-
-
 
 # =====================================================
 # 제목
@@ -487,19 +477,27 @@ if st.button(
 if st.session_state.show_game_over:
 
 
-    st.session_state.show_game_over = False
+    result_popup(
 
-    game_over_popup()
+        "💥 GAME OVER",
+
+        "폭탄을 발견했습니다!",
+
+        "🔄 다시 플레이하기"
+
+    )
 
 
 
 if st.session_state.show_cashout:
 
 
-    st.session_state.show_cashout = False
+    result_popup(
 
-    cashout_popup(
+        "🎉 SUCCESS",
 
-        st.session_state.cashout_reward
+        f"획득 칩 : {st.session_state.cashout_reward}칩",
+
+        "🔄 다시 플레이하기"
 
     )
