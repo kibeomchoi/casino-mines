@@ -87,15 +87,6 @@ st.markdown(
 
     /* dialog 내부 */
 
-    div[data-testid="stDialog"] h1 {
-
-        color:gold !important;
-
-        text-align:center;
-
-        font-size:40px;
-
-    }
 
 
     div[data-testid="stDialog"] p {
@@ -165,16 +156,44 @@ status = game.get_status()
 @st.dialog("💥 GAME OVER")
 def game_over_popup():
 
-
     st.markdown(
         """
-        <h2 style="
-        text-align:center;
-        color:white;
+        <div style="
+            background-color:#111;
+            border:3px solid red;
+            border-radius:20px;
+            padding:30px;
+            text-align:center;
         ">
-        폭탄을 발견했습니다!
-        </h2>
+
+            <h1 style="
+                color:#ff4444;
+                font-size:45px;
+                margin-bottom:20px;
+            ">
+                💥 GAME OVER
+            </h1>
+
+
+            <p style="
+                color:white;
+                font-size:25px;
+                font-weight:bold;
+            ">
+                폭탄을 발견했습니다!
+            </p>
+
+
+            <p style="
+                color:white;
+                font-size:20px;
+            ">
+                이번 게임은 종료되었습니다.
+            </p>
+
+        </div>
         """,
+
         unsafe_allow_html=True
     )
 
@@ -194,31 +213,54 @@ def game_over_popup():
         st.rerun()
 
 
-
 @st.dialog("🎉 SUCCESS")
 def cashout_popup(reward):
 
-
     st.markdown(
         f"""
-        <h2 style="
-        text-align:center;
-        color:white;
+        <div style="
+            background-color:#111;
+            border:3px solid gold;
+            border-radius:20px;
+            padding:30px;
+            text-align:center;
         ">
-        Cash Out 성공!
-        </h2>
 
 
-        <h2 style="
-        text-align:center;
-        color:gold;
-        ">
-        획득 칩 : {reward}칩
-        </h2>
+            <h1 style="
+                color:gold;
+                font-size:45px;
+            ">
+                🎉 SUCCESS
+            </h1>
+
+
+            <p style="
+                color:white;
+                font-size:25px;
+                font-weight:bold;
+            ">
+                Cash Out 성공!
+            </p>
+
+
+            <p style="
+                color:#ffd700;
+                font-size:30px;
+                font-weight:bold;
+            ">
+                획득 칩 : {reward}칩
+            </p>
+
+
+        </div>
         """,
 
         unsafe_allow_html=True
     )
+
+
+    st.write("")
 
 
     if st.button(
@@ -232,8 +274,6 @@ def cashout_popup(reward):
         st.session_state.show_cashout = False
 
         st.rerun()
-
-
 
 # =====================================================
 # 제목
