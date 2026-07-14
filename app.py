@@ -31,6 +31,42 @@ st.markdown(
     """
     <style>
 
+    /* 베팅 입력칸 */
+    div[data-testid="stNumberInput"] input {
+
+        color: white !important;
+
+        background-color: #222222 !important;
+
+        font-size: 22px !important;
+
+        font-weight: bold !important;
+
+    }
+
+
+    /* 입력칸 주변 설명 글씨 */
+    div[data-testid="stNumberInput"] label {
+
+        color: white !important;
+
+        font-size: 20px !important;
+
+        font-weight: bold !important;
+
+    }
+
+
+    </style>
+    """,
+
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    """
+    <style>
+
     /* 열린 칸 버튼(비활성 버튼) 이모지 선명하게 */
     div.stButton > button:disabled {
 
