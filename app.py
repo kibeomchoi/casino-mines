@@ -31,6 +31,34 @@ st.markdown(
     """
     <style>
 
+    /* 열린 칸 버튼(비활성 버튼) 이모지 선명하게 */
+    div.stButton > button:disabled {
+
+        opacity: 1 !important;
+
+        color: white !important;
+
+    }
+
+
+    div.stButton > button:disabled p {
+
+        opacity: 1 !important;
+
+        color: white !important;
+
+    }
+
+    </style>
+    """,
+
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    """
+    <style>
+
     /* 일반 글씨 */
     .stMarkdown,
     .stText,
