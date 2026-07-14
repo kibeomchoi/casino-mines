@@ -28,6 +28,44 @@ st.set_page_config(
 # CSS
 # =====================================================
 st.markdown(
+    """
+    <style>
+
+    /* 일반 글씨 */
+    .stMarkdown,
+    .stText,
+    label,
+    [data-testid="stMetricLabel"],
+    [data-testid="stMetricValue"] {
+
+        color: white !important;
+
+    }
+
+
+    /* 입력창 글씨 */
+    input {
+
+        color: white !important;
+
+    }
+
+
+    /* 숫자 입력 설명 */
+    .stNumberInput label {
+
+        color: white !important;
+
+    }
+
+
+    </style>
+    """,
+
+    unsafe_allow_html=True
+)
+
+st.markdown(
 """
 <style>
 .stApp {
