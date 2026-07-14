@@ -54,18 +54,18 @@ st.markdown(
 
     div.stButton > button {
 
-        background-color: #222;
-        color: white;
+    background-color: #222;
+    color: white;
 
-        border: 2px solid gold;
-        border-radius: 10px;
+    border: 2px solid gold;
+    border-radius: 10px;
 
-        height: 55px;
+    height: 65px;
 
-        font-size: 20px;
-        font-weight: bold;
+    font-size: 24px;
+    font-weight: bold;
 
-    }
+}
 
 
     div.stButton > button:hover {
@@ -326,95 +326,62 @@ if next_gem in PAYOUTS:
         f"{PAYOUTS[next_gem]}x"
 
     )
-
-
-
 # =====================================================
-# Cash Out
-# =====================================================
-
-
-current_reward = int(
-
-    st.session_state.bet_amount
-    *
-    status["multiplier"]
-
-)
-
-
-st.write(
-    f"💰 현재 Cash Out 금액: **{current_reward}칩**"
-)
-
-
-
-if st.button(
-    "💰 Cash Out"
-):
-
-
-    if game.can_cash_out():
-
-
-        result = game.cash_out(
-            st.session_state.bet_amount
-        )
-
-
-        st.success(
-            result["message"]
-        )
-
-
-        st.rerun()
-
-
-    else:
-
-
-        st.warning(
-            f"💎 보석 {MIN_CASHOUT}개 이상 필요합니다."
-        )
-
-
-
-# =====================================================
-# 결과
-# =====================================================
-
-
-if game.game_over:
-
-
-    if game.cashed_out:
-
-        st.success(
-            "🎉 안전하게 Cash Out 완료!"
-        )
-
-
-    else:
-
-        st.error(
-            "💣 폭탄 발견! 게임 종료!"
-        )
-
-
-
-# =====================================================
-# 새 게임
+# 하단 버튼
 # =====================================================
 
 
 st.divider()
 
 
-if st.button(
-    "🔄 다음 게임 시작"
-):
+button1, button2 = st.columns(2)
 
 
-    st.session_state.game = Game()
 
-    st.rerun()
+with button1:
+
+    if st.button(
+        "💰 Cash Out",
+        use_container_width=True
+    ):
+
+
+        if game.can_cash_out():
+
+
+            result = game.cash_out(
+                st.session_state.bet_amount
+            )
+
+
+            st.success(
+                result["message"]
+            )
+
+
+            st.rerun()
+
+
+        else:
+
+
+            st.warning(
+                f"💎 보석 {MIN_CASHOUT}개 이상 필요합니다."
+            )
+
+
+
+with button2:
+
+    if st.button(
+        "🔄 다음 게임 시작",
+        use_container_width=True
+    ):
+
+
+        st.session_state.game = Game()
+
+        st.rerun()
+
+
+
