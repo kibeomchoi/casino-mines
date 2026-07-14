@@ -198,7 +198,7 @@ def game_over_popup():
     )
 
 
-    st.write("")
+    st.markdown("")
 
 
     if st.button(
@@ -260,7 +260,7 @@ def cashout_popup(reward):
     )
 
 
-    st.write("")
+    st.markdown("")
 
 
     if st.button(
