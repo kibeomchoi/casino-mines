@@ -1,508 +1,434 @@
 """
-game.py
+=====================================================
+Casino Mines - Game Logic Part 1
 
-카지노 Mines 게임의 핵심 로직.
+게임의 핵심 로직을 담당하는 파일입니다.
 
-이 파일은 Game 클래스와 Cell 클래스를 정의한다.
-UI(Streamlit)는 app.py에서 담당하고,
-이 파일은 오직 게임 상태만 관리한다.
+구성:
+- Cell 클래스 : 보드의 한 칸 관리
+- Game 클래스 : 전체 게임 관리
+
+=====================================================
 """
 
 import random
 
 from config import (
-    BOARD_SIZE,
+    ROWS,
+    COLS,
     GEM_COUNT,
     BOMB_COUNT,
-    MIN_CASHOUT_GEMS,
-    MULTIPLIERS,
+    FIRST_CLICK_SAFE,
+    MIN_CASHOUT,
+    PAYOUTS,
 )
 
 
+# =====================================================
+# Cell 클래스
+# =====================================================
+
 class Cell:
     """
-    보드의 한 칸을 나타내는 클래스.
+    게임판의 하나의 칸을 관리하는 클래스
 
-    bomb      : 폭탄 여부
-    revealed  : 공개 여부
+    한 칸은:
+    - 폭탄인지
+    - 열렸는지
+    - 보석인지
+
+    정보를 가지고 있음.
     """
 
     def __init__(self):
-        """기본 상태로 초기화"""
+        # 폭탄 여부
+        self.is_bomb = False
 
-        self.bomb = False
-        self.revealed = False
+        # 플레이어가 클릭했는지 여부
+        self.is_open = False
 
+        # 보석 여부
+        self.is_gem = False
+
+    def open(self):
+        """
+        칸을 열기
+        """
+
+        self.is_open = True
+
+
+# =====================================================
+# Game 클래스
+# =====================================================
 
 class Game:
     """
-    카지노 Mines 게임 클래스.
-
-    게임 진행에 필요한
-    모든 상태를 저장한다.
+    Casino Mines 전체 게임 관리 클래스
     """
 
     def __init__(self):
-        """새 게임 생성"""
+        """
+        새로운 게임 시작
+        """
 
-        # 보드 생성
-        self.board = self._create_board()
+        # 게임판 생성
+        self.board = self.create_board()
 
         # 첫 클릭 여부
-        # False면 아직 폭탄이 생성되지 않음
-        self.first_click = False
+        self.first_click = True
+
+        # 현재 찾은 보석 개수
+        self.gems_found = 0
 
         # 게임 종료 여부
         self.game_over = False
 
-        # 승리 여부
-        self.win = False
-
-        # 획득한 보석 수
-        self.gems = 0
+        # Cash Out 여부
+        self.cashed_out = False
 
         # 현재 배율
-        self.multiplier = 1.0
+        self.current_multiplier = 1.0
 
-    # --------------------------------------------------
+
+    # =================================================
     # 보드 생성
-    # --------------------------------------------------
+    # =================================================
 
-    def _create_board(self):
+    def create_board(self):
         """
-        빈 보드를 생성한다.
+        5x5 게임판 생성
 
-        Returns
-        -------
-        list[list[Cell]]
+        처음에는 모든 칸이 빈 칸.
+        폭탄은 첫 클릭 이후 배치.
         """
 
         board = []
 
-        for _ in range(BOARD_SIZE):
-
+        for _ in range(ROWS):
             row = []
 
-            for _ in range(BOARD_SIZE):
+            for _ in range(COLS):
                 row.append(Cell())
 
             board.append(row)
 
         return board
 
-    # --------------------------------------------------
-    # 좌표 검사
-    # --------------------------------------------------
 
-    def is_valid(self, row, col):
+    # =================================================
+    # 폭탄 배치
+    # =================================================
+
+    def place_bombs(self, safe_position):
         """
-        좌표가 보드 안인지 확인.
+        첫 클릭 이후 폭탄 배치
 
-        Returns
-        -------
-        bool
+        safe_position:
+        플레이어가 처음 클릭한 위치
+
+        첫 클릭 위치에는 폭탄이 절대 생성되지 않음.
         """
 
-        return (
-            0 <= row < BOARD_SIZE
-            and
-            0 <= col < BOARD_SIZE
+        possible_positions = []
+
+        for row in range(ROWS):
+            for col in range(COLS):
+
+                # 첫 클릭 위치 제외
+                if (row, col) != safe_position:
+                    possible_positions.append((row, col))
+
+
+        # 폭탄 위치 랜덤 선택
+        bomb_positions = random.sample(
+            possible_positions,
+            BOMB_COUNT
         )
 
-    # --------------------------------------------------
-    # 셀 반환
-    # --------------------------------------------------
-
-    def get_cell(self, row, col):
-        """
-        Cell 객체 반환.
-
-        Parameters
-        ----------
-        row : int
-        col : int
-        """
-
-        if not self.is_valid(row, col):
-            return None
-
-        return self.board[row][col]
-
-    # --------------------------------------------------
-    # 공개 가능한지 확인
-    # --------------------------------------------------
-
-    def can_reveal(self, row, col):
-        """
-        해당 칸을 공개할 수 있는지 확인.
-
-        Returns
-        -------
-        bool
-        """
-
-        if self.game_over:
-            return False
-
-        cell = self.get_cell(row, col)
-
-        if cell is None:
-            return False
-
-        if cell.revealed:
-            return False
-
-        return True
-
-    # --------------------------------------------------
-    # 현재 배율 계산
-    # --------------------------------------------------
-
-    def update_multiplier(self):
-        """
-        현재 획득한 보석 수에 따라
-        배율을 계산한다.
-        """
-
-        self.multiplier = MULTIPLIERS.get(
-            self.gems,
-            1.0
-        )
-
-    # --------------------------------------------------
-    # Cash Out 가능 여부
-    # --------------------------------------------------
-
-    def can_cash_out(self):
-        """
-        Cash Out 가능한지 확인.
-
-        Returns
-        -------
-        bool
-        """
-
-        return self.gems >= MIN_CASHOUT_GEMS
-      # --------------------------------------------------
-    # 폭탄 생성
-    # --------------------------------------------------
-
-    def generate_bombs(self, safe_row, safe_col):
-        """
-        첫 클릭 이후 폭탄을 생성한다.
-
-        Parameters
-        ----------
-        safe_row : int
-            첫 클릭한 행
-
-        safe_col : int
-            첫 클릭한 열
-        """
-
-        positions = []
-
-        # 첫 클릭한 칸을 제외한 좌표 저장
-        for row in range(BOARD_SIZE):
-            for col in range(BOARD_SIZE):
-
-                if row == safe_row and col == safe_col:
-                    continue
-
-                positions.append((row, col))
-
-        # 랜덤 섞기
-        random.shuffle(positions)
 
         # 폭탄 배치
-        for row, col in positions[:BOMB_COUNT]:
-            self.board[row][col].bomb = True
+        for row, col in bomb_positions:
+            self.board[row][col].is_bomb = True
 
-        # 첫 클릭 완료
-        self.first_click = True
 
-    # --------------------------------------------------
-    # 모든 칸 공개
-    # --------------------------------------------------
+        # 나머지는 보석 처리
+        for row in range(ROWS):
+            for col in range(COLS):
 
-    def reveal_all(self):
+                cell = self.board[row][col]
+
+                if not cell.is_bomb:
+                    cell.is_gem = True
+    # =================================================
+    # 칸 클릭 처리
+    # =================================================
+
+    def click_cell(self, row, col):
         """
-        게임 종료 시
-        모든 칸을 공개한다.
-        """
+        플레이어가 특정 칸을 클릭했을 때 실행
 
-        for row in self.board:
-            for cell in row:
-                cell.revealed = True
-
-    # --------------------------------------------------
-    # 게임 종료
-    # --------------------------------------------------
-
-    def end_game(self, win=False):
-        """
-        게임을 종료한다.
-
-        Parameters
-        ----------
-        win : bool
-            승리 여부
+        반환값:
+        {
+            "result": 결과,
+            "message": 메시지
+        }
         """
 
-        self.game_over = True
-        self.win = win
-
-        self.reveal_all()
-
-    # --------------------------------------------------
-    # 승리 여부 확인
-    # --------------------------------------------------
-
-    def check_win(self):
-        """
-        모든 보석을 찾았는지 확인한다.
-
-        Returns
-        -------
-        bool
-        """
-
-        return self.gems >= GEM_COUNT
-
-    # --------------------------------------------------
-    # 셀 공개
-    # --------------------------------------------------
-
-    def reveal(self, row, col):
-        """
-        셀 하나를 공개한다.
-
-        Returns
-        -------
-        bool
-
-        True  : 보석
-
-        False : 폭탄
-        """
-
-        # 클릭 가능한지 확인
-        if not self.can_reveal(row, col):
-            return None
-
-        # 첫 클릭이면 폭탄 생성
-        if not self.first_click:
-            self.generate_bombs(row, col)
-
-        cell = self.get_cell(row, col)
-
-        cell.revealed = True
-
-        # 폭탄 클릭
-        if cell.bomb:
-            self.end_game(False)
-            return False
-
-        # 보석 획득
-        self.gems += 1
-
-        # 배율 갱신
-        self.update_multiplier()
-
-        # 승리 확인
-        if self.check_win():
-            self.end_game(True)
-
-        return True
-          # --------------------------------------------------
-    # Cash Out 실행
-    # --------------------------------------------------
-
-    def cash_out(self):
-        """
-        현재 게임을 Cash Out 한다.
-
-        Returns
-        -------
-        float
-            현재 배율
-
-        None
-            Cash Out 불가능
-        """
-
-        if not self.can_cash_out():
-            return None
-
-        self.end_game(True)
-
-        return self.multiplier
+        # 이미 끝난 게임이면 클릭 불가
+        if self.game_over:
+            return {
+                "result": "error",
+                "message": "이미 종료된 게임입니다."
+            }
 
 
-    # --------------------------------------------------
-    # 게임 초기화
-    # --------------------------------------------------
-
-    def reset(self):
-        """
-        새로운 게임으로 초기화한다.
-        """
-
-        self.board = self._create_board()
-
-        self.first_click = False
-
-        self.game_over = False
-
-        self.win = False
-
-        self.gems = 0
-
-        self.multiplier = 1.0
+        # 잘못된 좌표 방지
+        if not (0 <= row < ROWS and 0 <= col < COLS):
+            return {
+                "result": "error",
+                "message": "잘못된 위치입니다."
+            }
 
 
-    # --------------------------------------------------
-    # 현재 상태 반환
-    # --------------------------------------------------
+        cell = self.board[row][col]
 
-    def get_status(self):
-        """
-        현재 게임 상태를 반환한다.
 
-        Streamlit 화면 출력용.
+        # 이미 연 칸이면 무시
+        if cell.is_open:
+            return {
+                "result": "error",
+                "message": "이미 선택한 칸입니다."
+            }
 
-        Returns
-        -------
-        dict
-        """
+
+        # =============================================
+        # 첫 클릭 처리
+        # =============================================
+
+        if self.first_click:
+
+            if FIRST_CLICK_SAFE:
+                self.place_bombs((row, col))
+
+            self.first_click = False
+
+
+
+        # 칸 열기
+        cell.open()
+
+
+
+        # =============================================
+        # 폭탄 발견
+        # =============================================
+
+        if cell.is_bomb:
+
+            self.game_over = True
+
+            return {
+                "result": "bomb",
+                "message": "💥 BOOM! 폭탄을 밟았습니다."
+            }
+
+
+
+        # =============================================
+        # 보석 발견
+        # =============================================
+
+        if cell.is_gem:
+
+            self.gems_found += 1
+
+            self.update_multiplier()
+
+
+            return {
+                "result": "gem",
+                "message": "💎 보석 발견!"
+            }
+
 
         return {
-            "gems": self.gems,
-            "multiplier": self.multiplier,
-            "game_over": self.game_over,
-            "win": self.win,
+            "result": "unknown",
+            "message": "알 수 없는 결과"
         }
 
 
-    # --------------------------------------------------
-    # 셀 상태 반환
-    # --------------------------------------------------
 
-    def get_cell_state(self, row, col):
+    # =================================================
+    # 배율 업데이트
+    # =================================================
+
+    def update_multiplier(self):
         """
-        특정 칸의 상태 반환.
-
-        Streamlit에서
-        버튼 표시용으로 사용한다.
-
-        Returns
-        -------
-        str
+        현재 보석 개수에 따른 배율 계산
         """
 
-        cell = self.get_cell(row, col)
+        if self.gems_found in PAYOUTS:
+            self.current_multiplier = PAYOUTS[self.gems_found]
 
-        if cell is None:
-            return "empty"
+        else:
+            # 아직 Cash Out 가능 구간이 아니거나
+            # 설정되지 않은 구간
 
-        if not cell.revealed:
-            return "hidden"
+            self.current_multiplier = 1.0
 
-        if cell.bomb:
-            return "bomb"
 
-        return "gem"
-        # --------------------------------------------------
-    # 보드 전체 상태 반환
-    # --------------------------------------------------
 
-    def get_board_state(self):
+    # =================================================
+    # 현재 상태 반환
+    # =================================================
+
+    def get_status(self):
         """
-        현재 보드 상태를 반환한다.
+        현재 게임 상태 반환
 
-        Streamlit에서
-        전체 보드를 그릴 때 사용한다.
-
-        Returns
-        -------
-        list[list[str]]
+        Streamlit 화면에서 사용 예정
         """
 
-        state = []
+        return {
+            "gems_found": self.gems_found,
+            "multiplier": self.current_multiplier,
+            "game_over": self.game_over,
+            "cashed_out": self.cashed_out
+        }
+    # =================================================
+    # Cash Out
+    # =================================================
 
-        for row in range(BOARD_SIZE):
-
-            row_state = []
-
-            for col in range(BOARD_SIZE):
-
-                row_state.append(
-                    self.get_cell_state(row, col)
-                )
-
-            state.append(row_state)
-
-        return state
-
-
-    # --------------------------------------------------
-    # 남은 클릭 가능 칸 확인
-    # --------------------------------------------------
-
-    def remaining_cells(self):
+    def can_cash_out(self):
         """
-        아직 공개하지 않은 칸 개수를 반환한다.
-
-        Returns
-        -------
-        int
+        현재 Cash Out 가능 여부 확인
         """
 
-        count = 0
+        return (
+            self.gems_found >= MIN_CASHOUT
+            and not self.game_over
+            and not self.cashed_out
+        )
+
+
+    def cash_out(self, chips):
+        """
+        현재 배율 기준으로 칩 획득
+
+        chips:
+        플레이어가 건 칩
+
+        반환:
+        획득한 칩
+        """
+
+        if not self.can_cash_out():
+            return {
+                "success": False,
+                "reward": 0,
+                "message": "아직 Cash Out 할 수 없습니다."
+            }
+
+
+        reward = int(
+            chips * self.current_multiplier
+        )
+
+
+        self.cashed_out = True
+        self.game_over = True
+
+
+        return {
+            "success": True,
+            "reward": reward,
+            "message": f"💰 {reward}칩 획득!"
+        }
+
+
+
+    # =================================================
+    # 폭탄 전체 공개
+    # =================================================
+
+    def reveal_all(self):
+        """
+        게임 종료 후 모든 칸 공개
+
+        UI에서 사용
+        """
 
         for row in self.board:
 
             for cell in row:
 
-                if not cell.revealed:
-                    count += 1
-
-        return count
+                cell.open()
 
 
-    # --------------------------------------------------
-    # 게임 진행 가능 여부
-    # --------------------------------------------------
 
-    def is_playing(self):
+    # =================================================
+    # 보드 상태 반환
+    # =================================================
+
+    def get_board_state(self):
         """
-        현재 게임 진행 중인지 확인한다.
+        Streamlit에서 화면 출력용
 
-        Returns
-        -------
-        bool
-        """
+        반환 예시:
 
-        return not self.game_over
+        [
+            [
+                {"bomb":False, "open":True, "gem":True},
+                ...
+            ]
+        ]
 
-
-    # --------------------------------------------------
-    # 현재 보석 개수 반환
-    # --------------------------------------------------
-
-    def get_gems(self):
-        """
-        현재 획득한 보석 개수를 반환한다.
         """
 
-        return self.gems
-    # --------------------------------------------------
-    # 현재 배율 반환
-    # --------------------------------------------------
+        board_state = []
 
-    def get_multiplier(self):
+
+        for row in self.board:
+
+            row_state = []
+
+
+            for cell in row:
+
+                row_state.append(
+                    {
+                        "bomb": cell.is_bomb,
+                        "gem": cell.is_gem,
+                        "open": cell.is_open
+                    }
+                )
+
+
+            board_state.append(row_state)
+
+
+        return board_state
+
+
+
+    # =================================================
+    # 게임 초기화
+    # =================================================
+
+    def reset(self):
         """
-        현재 배율 반환.
+        새로운 게임 시작
         """
 
-        return self.multiplier
+        self.board = self.create_board()
+
+        self.first_click = True
+
+        self.gems_found = 0
+
+        self.game_over = False
+
+        self.cashed_out = False
+
+        self.current_multiplier = 1.0
