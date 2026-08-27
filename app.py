@@ -30,92 +30,35 @@ st.markdown(
     """
     <style>
 
-    /* =====================================================
-       1. Streamlit 기본 텍스트 색상 강제
-       ===================================================== */
+    /* =========================================
+       전체 화면
+       ========================================= */
 
-    :root {
-        --text-color: #ffffff !important;
-        --secondary-text-color: #ffffff !important;
-        --gray-50: #ffffff !important;
-        --gray-60: #ffffff !important;
-        --gray-70: #ffffff !important;
-    }
-
-    body {
-        color: #ffffff !important;
-        background-color: #0b0b0b !important;
-    }
-
-    .stApp {
-        background-color: #0b0b0b !important;
-        color: #ffffff !important;
-
-        --text-color: #ffffff !important;
-        --secondary-text-color: #ffffff !important;
-    }
-
-    [data-testid="stAppViewContainer"] {
-        background-color: #0b0b0b !important;
-        color: #ffffff !important;
-
-        --text-color: #ffffff !important;
-        --secondary-text-color: #ffffff !important;
-    }
-
+    html,
+    body,
+    .stApp,
+    [data-testid="stAppViewContainer"],
     [data-testid="stMain"] {
-        background-color: #0b0b0b !important;
+
+        background-color: #000000 !important;
         color: #ffffff !important;
-    }
-
-
-    /* =====================================================
-       2. 메인 화면 Markdown
-       ===================================================== */
-
-    [data-testid="stMain"] [data-testid="stMarkdownContainer"] {
-        color: #ffffff !important;
-    }
-
-    [data-testid="stMain"] [data-testid="stMarkdownContainer"] p,
-    [data-testid="stMain"] [data-testid="stMarkdownContainer"] span,
-    [data-testid="stMain"] [data-testid="stMarkdownContainer"] strong,
-    [data-testid="stMain"] [data-testid="stMarkdownContainer"] b,
-    [data-testid="stMain"] [data-testid="stMarkdownContainer"] em,
-    [data-testid="stMain"] [data-testid="stMarkdownContainer"] div {
-
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-        opacity: 1 !important;
 
     }
 
 
-    /* =====================================================
-       3. 메인 제목
-       ===================================================== */
+    /* =========================================
+       메인 화면 텍스트
+       ========================================= */
 
     [data-testid="stMain"] h1,
     [data-testid="stMain"] h2,
     [data-testid="stMain"] h3,
     [data-testid="stMain"] h4,
     [data-testid="stMain"] h5,
-    [data-testid="stMain"] h6 {
-
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-        opacity: 1 !important;
-
-    }
-
-
-    /* =====================================================
-       4. Streamlit 일반 텍스트
-       ===================================================== */
-
+    [data-testid="stMain"] h6,
     [data-testid="stMain"] p,
-    [data-testid="stMain"] label,
     [data-testid="stMain"] span,
+    [data-testid="stMain"] label,
     [data-testid="stMain"] strong,
     [data-testid="stMain"] b {
 
@@ -126,66 +69,70 @@ st.markdown(
     }
 
 
-    /* =====================================================
-       5. 숫자 입력창
-       ===================================================== */
+    /* =========================================
+       Markdown
+       ========================================= */
 
-    [data-testid="stNumberInput"] label,
-    [data-testid="stNumberInput"] label span {
+    [data-testid="stMarkdownContainer"],
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] span,
+    [data-testid="stMarkdownContainer"] strong,
+    [data-testid="stMarkdownContainer"] b {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
         opacity: 1 !important;
+
+    }
+
+
+    /* =========================================
+       숫자 입력창
+       ========================================= */
+
+    [data-testid="stNumberInput"] {
+
+        background-color: #1a1a1a !important;
+        border: 2px solid #ffffff !important;
+        border-radius: 8px !important;
 
     }
 
     [data-testid="stNumberInput"] input {
 
-        background-color: #222222 !important;
+        background-color: #1a1a1a !important;
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
-        border: 1px solid #ffffff !important;
-        opacity: 1 !important;
+        font-weight: 700 !important;
+
+    }
+
+    [data-testid="stNumberInput"] label,
+    [data-testid="stNumberInput"] label * {
+
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
-    /* =====================================================
-       6. 버튼
-       ===================================================== */
+    /* =========================================
+       버튼
+       ========================================= */
 
     [data-testid="stButton"] button {
 
+        background-color: #1a1a1a !important;
+        border: 2px solid #ffffff !important;
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
+
+        font-weight: 800 !important;
         opacity: 1 !important;
 
     }
 
-    [data-testid="stButton"] button p,
-    [data-testid="stButton"] button span,
-    [data-testid="stButton"] button div {
-
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-        opacity: 1 !important;
-
-    }
-
-
-    /* =====================================================
-       7. 게임판 버튼
-       ===================================================== */
-
-    [data-testid="stButton"] button:disabled {
-
-        opacity: 1 !important;
-
-    }
-
-    [data-testid="stButton"] button:disabled p,
-    [data-testid="stButton"] button:disabled span,
-    [data-testid="stButton"] button:disabled div {
+    [data-testid="stButton"] button * {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -194,20 +141,18 @@ st.markdown(
     }
 
 
-    /* =====================================================
-       8. 성공 / 경고 / 에러 / 정보
-       ===================================================== */
+    /* =========================================
+       알림창
+       ========================================= */
 
     [data-testid="stAlert"] {
 
-        opacity: 1 !important;
+        background-color: #1a1a1a !important;
+        border: 2px solid #ffffff !important;
 
     }
 
-    [data-testid="stAlert"] p,
-    [data-testid="stAlert"] span,
-    [data-testid="stAlert"] strong,
-    [data-testid="stAlert"] div {
+    [data-testid="stAlert"] * {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -216,26 +161,29 @@ st.markdown(
     }
 
 
-    /* =====================================================
-       9. 팝업
-       ===================================================== */
+    /* =========================================
+       팝업
+       ========================================= */
 
     [role="dialog"] {
 
-        background-color: #eeeeee !important;
+        background-color: #ffffff !important;
         color: #000000 !important;
+        border: 4px solid #000000 !important;
 
     }
 
-    [role="dialog"] h1,
-    [role="dialog"] h2,
-    [role="dialog"] h3,
-    [role="dialog"] h4,
+
+    /* 팝업 내부 */
+    [role="dialog"] [data-testid="stMarkdownContainer"],
+    [role="dialog"] [data-testid="stMarkdownContainer"] *,
     [role="dialog"] p,
     [role="dialog"] span,
     [role="dialog"] strong,
     [role="dialog"] b,
-    [role="dialog"] label {
+    [role="dialog"] h1,
+    [role="dialog"] h2,
+    [role="dialog"] h3 {
 
         color: #000000 !important;
         -webkit-text-fill-color: #000000 !important;
@@ -244,44 +192,26 @@ st.markdown(
     }
 
 
-    /* =====================================================
-       10. 팝업의 Streamlit Markdown
-       ===================================================== */
-
-    [role="dialog"] [data-testid="stMarkdownContainer"],
-    [role="dialog"] [data-testid="stMarkdownContainer"] * {
-
-        color: #000000 !important;
-        -webkit-text-fill-color: #000000 !important;
-        opacity: 1 !important;
-
-    }
-
-
-    /* =====================================================
-       11. 팝업 버튼
-       ===================================================== */
+    /* =========================================
+       팝업 버튼
+       ========================================= */
 
     [role="dialog"] [data-testid="stButton"] button {
 
-        background-color: #222222 !important;
-        border: 2px solid #000000 !important;
-
+        background-color: #000000 !important;
+        border: 3px solid #000000 !important;
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
 
+        font-weight: 900 !important;
         opacity: 1 !important;
-        font-weight: 800 !important;
 
     }
 
-    [role="dialog"] [data-testid="stButton"] button p,
-    [role="dialog"] [data-testid="stButton"] button span,
-    [role="dialog"] [data-testid="stButton"] button div {
+    [role="dialog"] [data-testid="stButton"] button * {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
-        opacity: 1 !important;
 
     }
 
@@ -446,11 +376,14 @@ def cashout_popup(reward):
 st.markdown(
     """
     <div style="
-        color:#ffffff;
+        background:#ffffff;
+        color:#000000 !important;
         font-size:42px;
-        font-weight:800;
+        font-weight:900;
         text-align:center;
-        margin-bottom:25px;
+        padding:15px;
+        border-radius:10px;
+        margin-bottom:20px;
     ">
         🎰 Casino Mines
     </div>
@@ -521,11 +454,13 @@ if st.session_state.balance is None:
 st.markdown(
     f"""
     <div style="
-        color:#ffffff;
+        background:#ffffff;
+        color:#000000 !important;
         font-size:28px;
-        font-weight:800;
-        margin-top:10px;
-        margin-bottom:15px;
+        font-weight:900;
+        padding:12px 18px;
+        border-radius:8px;
+        margin-bottom:20px;
     ">
         💰 현재 잔액 : {st.session_state.balance}칩
     </div>
