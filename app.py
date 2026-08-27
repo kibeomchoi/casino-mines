@@ -31,22 +31,45 @@ st.markdown(
     <style>
 
     /* =====================================================
-       전체 배경
+       전체 앱
        ===================================================== */
+
+    :root {
+        --text-color: #ffffff !important;
+        --secondary-text-color: #ffffff !important;
+    }
 
     .stApp {
         background-color: #0b0b0b !important;
+        color: #ffffff !important;
+    }
+
+    [data-testid="stAppViewContainer"] {
+        background-color: #0b0b0b !important;
+        color: #ffffff !important;
+    }
+
+    [data-testid="stMain"] {
+        background-color: #0b0b0b !important;
+        color: #ffffff !important;
     }
 
 
     /* =====================================================
-       메인 화면 - 제목
+       메인 화면 모든 텍스트
        ===================================================== */
 
-    [data-testid="stAppViewContainer"] h1,
-    [data-testid="stAppViewContainer"] h2,
-    [data-testid="stAppViewContainer"] h3,
-    [data-testid="stAppViewContainer"] h4 {
+    [data-testid="stMain"] h1,
+    [data-testid="stMain"] h2,
+    [data-testid="stMain"] h3,
+    [data-testid="stMain"] h4,
+    [data-testid="stMain"] h5,
+    [data-testid="stMain"] h6,
+    [data-testid="stMain"] p,
+    [data-testid="stMain"] span,
+    [data-testid="stMain"] label,
+    [data-testid="stMain"] strong,
+    [data-testid="stMain"] b {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -56,14 +79,11 @@ st.markdown(
 
 
     /* =====================================================
-       메인 화면 - Markdown 굵은 글씨 포함
+       Markdown
        ===================================================== */
 
-    [data-testid="stAppViewContainer"] .stMarkdown,
-    [data-testid="stAppViewContainer"] .stMarkdown p,
-    [data-testid="stAppViewContainer"] .stMarkdown strong,
-    [data-testid="stAppViewContainer"] .stMarkdown b,
-    [data-testid="stAppViewContainer"] .stMarkdown span {
+    [data-testid="stMarkdownContainer"],
+    [data-testid="stMarkdownContainer"] * {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -73,21 +93,20 @@ st.markdown(
 
 
     /* =====================================================
-       메인 화면 - 일반 텍스트
+       제목
        ===================================================== */
 
-    [data-testid="stAppViewContainer"] [data-testid="stText"],
-    [data-testid="stAppViewContainer"] label {
+    [data-testid="stMain"] h1 {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
-        opacity: 1 !important;
+        font-weight: 900 !important;
 
     }
 
 
     /* =====================================================
-       메인 화면 - 베팅 입력창
+       입력창
        ===================================================== */
 
     [data-testid="stNumberInput"] label,
@@ -100,19 +119,32 @@ st.markdown(
 
     }
 
-
     [data-testid="stNumberInput"] input {
 
         background-color: #222222 !important;
+        border: 1px solid #ffffff !important;
 
     }
 
 
     /* =====================================================
-       메인 화면 - 버튼
+       입력창 +/- 버튼
        ===================================================== */
 
-    [data-testid="stAppViewContainer"] [data-testid="stButton"] button {
+    [data-testid="stNumberInput"] button,
+    [data-testid="stNumberInput"] button * {
+
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+
+    }
+
+
+    /* =====================================================
+       일반 버튼
+       ===================================================== */
+
+    [data-testid="stButton"] button {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -120,8 +152,7 @@ st.markdown(
 
     }
 
-
-    [data-testid="stAppViewContainer"] [data-testid="stButton"] button * {
+    [data-testid="stButton"] button * {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -131,7 +162,7 @@ st.markdown(
 
 
     /* =====================================================
-       게임판 열린 칸
+       게임판 버튼
        ===================================================== */
 
     [data-testid="stButton"] button:disabled {
@@ -140,10 +171,11 @@ st.markdown(
 
     }
 
-
     [data-testid="stButton"] button:disabled * {
 
         opacity: 1 !important;
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
@@ -152,9 +184,13 @@ st.markdown(
        알림창
        ===================================================== */
 
-    [data-testid="stAlert"] p,
-    [data-testid="stAlert"] span,
-    [data-testid="stAlert"] strong {
+    [data-testid="stAlert"] {
+
+        opacity: 1 !important;
+
+    }
+
+    [data-testid="stAlert"] * {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -164,18 +200,20 @@ st.markdown(
 
 
     /* =====================================================
-       팝업 전체
+       팝업 배경
        ===================================================== */
 
-    [role="dialog"] {
+    [role="dialog"],
+    [data-testid="stDialog"] {
 
         background-color: #eeeeee !important;
+        color: #000000 !important;
 
     }
 
 
     /* =====================================================
-       팝업 글씨 - 전부 검은색
+       팝업 내부 전체 글씨
        ===================================================== */
 
     [role="dialog"] h1,
@@ -184,9 +222,16 @@ st.markdown(
     [role="dialog"] h4,
     [role="dialog"] p,
     [role="dialog"] span,
-    [role="dialog"] div,
     [role="dialog"] strong,
-    [role="dialog"] b {
+    [role="dialog"] b,
+    [data-testid="stDialog"] h1,
+    [data-testid="stDialog"] h2,
+    [data-testid="stDialog"] h3,
+    [data-testid="stDialog"] h4,
+    [data-testid="stDialog"] p,
+    [data-testid="stDialog"] span,
+    [data-testid="stDialog"] strong,
+    [data-testid="stDialog"] b {
 
         color: #000000 !important;
         -webkit-text-fill-color: #000000 !important;
@@ -199,19 +244,21 @@ st.markdown(
        팝업 버튼
        ===================================================== */
 
-    [role="dialog"] [data-testid="stButton"] button {
+    [role="dialog"] [data-testid="stButton"] button,
+    [data-testid="stDialog"] [data-testid="stButton"] button {
 
         background-color: #222222 !important;
         border: 2px solid #000000 !important;
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
-        font-weight: bold !important;
         opacity: 1 !important;
+        font-weight: 800 !important;
 
     }
 
 
-    [role="dialog"] [data-testid="stButton"] button * {
+    [role="dialog"] [data-testid="stButton"] button *,
+    [data-testid="stDialog"] [data-testid="stButton"] button * {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -221,7 +268,7 @@ st.markdown(
 
 
     /* =====================================================
-       팝업 닫기 X 버튼
+       팝업 닫기 버튼
        ===================================================== */
 
     [role="dialog"] button[aria-label="Close"] {
