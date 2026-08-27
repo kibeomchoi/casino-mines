@@ -31,22 +31,36 @@ st.markdown(
     <style>
 
     /* =====================================================
-       전체 앱
+       1. Streamlit 기본 텍스트 색상 강제
        ===================================================== */
 
     :root {
         --text-color: #ffffff !important;
         --secondary-text-color: #ffffff !important;
+        --gray-50: #ffffff !important;
+        --gray-60: #ffffff !important;
+        --gray-70: #ffffff !important;
+    }
+
+    body {
+        color: #ffffff !important;
+        background-color: #0b0b0b !important;
     }
 
     .stApp {
         background-color: #0b0b0b !important;
         color: #ffffff !important;
+
+        --text-color: #ffffff !important;
+        --secondary-text-color: #ffffff !important;
     }
 
     [data-testid="stAppViewContainer"] {
         background-color: #0b0b0b !important;
         color: #ffffff !important;
+
+        --text-color: #ffffff !important;
+        --secondary-text-color: #ffffff !important;
     }
 
     [data-testid="stMain"] {
@@ -56,7 +70,29 @@ st.markdown(
 
 
     /* =====================================================
-       메인 화면 모든 텍스트
+       2. 메인 화면 Markdown
+       ===================================================== */
+
+    [data-testid="stMain"] [data-testid="stMarkdownContainer"] {
+        color: #ffffff !important;
+    }
+
+    [data-testid="stMain"] [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMain"] [data-testid="stMarkdownContainer"] span,
+    [data-testid="stMain"] [data-testid="stMarkdownContainer"] strong,
+    [data-testid="stMain"] [data-testid="stMarkdownContainer"] b,
+    [data-testid="stMain"] [data-testid="stMarkdownContainer"] em,
+    [data-testid="stMain"] [data-testid="stMarkdownContainer"] div {
+
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
+
+    }
+
+
+    /* =====================================================
+       3. 메인 제목
        ===================================================== */
 
     [data-testid="stMain"] h1,
@@ -64,10 +100,22 @@ st.markdown(
     [data-testid="stMain"] h3,
     [data-testid="stMain"] h4,
     [data-testid="stMain"] h5,
-    [data-testid="stMain"] h6,
+    [data-testid="stMain"] h6 {
+
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
+
+    }
+
+
+    /* =====================================================
+       4. Streamlit 일반 텍스트
+       ===================================================== */
+
     [data-testid="stMain"] p,
-    [data-testid="stMain"] span,
     [data-testid="stMain"] label,
+    [data-testid="stMain"] span,
     [data-testid="stMain"] strong,
     [data-testid="stMain"] b {
 
@@ -79,39 +127,11 @@ st.markdown(
 
 
     /* =====================================================
-       Markdown
-       ===================================================== */
-
-    [data-testid="stMarkdownContainer"],
-    [data-testid="stMarkdownContainer"] * {
-
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-        opacity: 1 !important;
-
-    }
-
-
-    /* =====================================================
-       제목
-       ===================================================== */
-
-    [data-testid="stMain"] h1 {
-
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-        font-weight: 900 !important;
-
-    }
-
-
-    /* =====================================================
-       입력창
+       5. 숫자 입력창
        ===================================================== */
 
     [data-testid="stNumberInput"] label,
-    [data-testid="stNumberInput"] label *,
-    [data-testid="stNumberInput"] input {
+    [data-testid="stNumberInput"] label span {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -122,26 +142,16 @@ st.markdown(
     [data-testid="stNumberInput"] input {
 
         background-color: #222222 !important;
-        border: 1px solid #ffffff !important;
-
-    }
-
-
-    /* =====================================================
-       입력창 +/- 버튼
-       ===================================================== */
-
-    [data-testid="stNumberInput"] button,
-    [data-testid="stNumberInput"] button * {
-
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
+        border: 1px solid #ffffff !important;
+        opacity: 1 !important;
 
     }
 
 
     /* =====================================================
-       일반 버튼
+       6. 버튼
        ===================================================== */
 
     [data-testid="stButton"] button {
@@ -152,7 +162,9 @@ st.markdown(
 
     }
 
-    [data-testid="stButton"] button * {
+    [data-testid="stButton"] button p,
+    [data-testid="stButton"] button span,
+    [data-testid="stButton"] button div {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -162,7 +174,7 @@ st.markdown(
 
 
     /* =====================================================
-       게임판 버튼
+       7. 게임판 버튼
        ===================================================== */
 
     [data-testid="stButton"] button:disabled {
@@ -171,17 +183,19 @@ st.markdown(
 
     }
 
-    [data-testid="stButton"] button:disabled * {
+    [data-testid="stButton"] button:disabled p,
+    [data-testid="stButton"] button:disabled span,
+    [data-testid="stButton"] button:disabled div {
 
-        opacity: 1 !important;
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
 
     }
 
 
     /* =====================================================
-       알림창
+       8. 성공 / 경고 / 에러 / 정보
        ===================================================== */
 
     [data-testid="stAlert"] {
@@ -190,7 +204,10 @@ st.markdown(
 
     }
 
-    [data-testid="stAlert"] * {
+    [data-testid="stAlert"] p,
+    [data-testid="stAlert"] span,
+    [data-testid="stAlert"] strong,
+    [data-testid="stAlert"] div {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
@@ -200,21 +217,15 @@ st.markdown(
 
 
     /* =====================================================
-       팝업 배경
+       9. 팝업
        ===================================================== */
 
-    [role="dialog"],
-    [data-testid="stDialog"] {
+    [role="dialog"] {
 
         background-color: #eeeeee !important;
         color: #000000 !important;
 
     }
-
-
-    /* =====================================================
-       팝업 내부 전체 글씨
-       ===================================================== */
 
     [role="dialog"] h1,
     [role="dialog"] h2,
@@ -224,14 +235,7 @@ st.markdown(
     [role="dialog"] span,
     [role="dialog"] strong,
     [role="dialog"] b,
-    [data-testid="stDialog"] h1,
-    [data-testid="stDialog"] h2,
-    [data-testid="stDialog"] h3,
-    [data-testid="stDialog"] h4,
-    [data-testid="stDialog"] p,
-    [data-testid="stDialog"] span,
-    [data-testid="stDialog"] strong,
-    [data-testid="stDialog"] b {
+    [role="dialog"] label {
 
         color: #000000 !important;
         -webkit-text-fill-color: #000000 !important;
@@ -241,40 +245,43 @@ st.markdown(
 
 
     /* =====================================================
-       팝업 버튼
+       10. 팝업의 Streamlit Markdown
        ===================================================== */
 
-    [role="dialog"] [data-testid="stButton"] button,
-    [data-testid="stDialog"] [data-testid="stButton"] button {
+    [role="dialog"] [data-testid="stMarkdownContainer"],
+    [role="dialog"] [data-testid="stMarkdownContainer"] * {
+
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+        opacity: 1 !important;
+
+    }
+
+
+    /* =====================================================
+       11. 팝업 버튼
+       ===================================================== */
+
+    [role="dialog"] [data-testid="stButton"] button {
 
         background-color: #222222 !important;
         border: 2px solid #000000 !important;
+
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
+
         opacity: 1 !important;
         font-weight: 800 !important;
 
     }
 
-
-    [role="dialog"] [data-testid="stButton"] button *,
-    [data-testid="stDialog"] [data-testid="stButton"] button * {
+    [role="dialog"] [data-testid="stButton"] button p,
+    [role="dialog"] [data-testid="stButton"] button span,
+    [role="dialog"] [data-testid="stButton"] button div {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
         opacity: 1 !important;
-
-    }
-
-
-    /* =====================================================
-       팝업 닫기 버튼
-       ===================================================== */
-
-    [role="dialog"] button[aria-label="Close"] {
-
-        color: #000000 !important;
-        -webkit-text-fill-color: #000000 !important;
 
     }
 
