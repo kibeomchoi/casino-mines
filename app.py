@@ -30,54 +30,152 @@ st.markdown(
     """
     <style>
 
+    /* =================================================
+       전체 배경
+       ================================================= */
+
     .stApp {
-        background-color: #0b0b0b;
+        background-color: #0b0b0b !important;
     }
 
 
-    /* 일반 글씨 */
+    /* =================================================
+       일반 텍스트
+       ================================================= */
+
     .stMarkdown,
+    .stMarkdown p,
+    .stMarkdown span,
+    .stMarkdown div,
     .stText,
     label {
-        color: white !important;
+
+        color: #ffffff !important;
+
     }
 
 
-    /* 버튼 글씨 */
+    /* =================================================
+       제목
+       ================================================= */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+
+        color: #ffffff !important;
+
+    }
+
+
+    /* =================================================
+       입력창 설명
+       ================================================= */
+
+    div[data-testid="stNumberInput"] label {
+
+        color: #ffffff !important;
+
+    }
+
+
+    /* =================================================
+       입력창 내부 숫자
+       ================================================= */
+
+    div[data-testid="stNumberInput"] input {
+
+        color: #ffffff !important;
+
+        background-color: #222222 !important;
+
+        font-size: 22px !important;
+
+        font-weight: bold !important;
+
+    }
+
+
+    /* =================================================
+       버튼
+       ================================================= */
+
     div.stButton > button {
-        color: white !important;
-        font-size: 20px;
-        font-weight: bold;
+
+        color: #ffffff !important;
+
+        font-size: 20px !important;
+
+        font-weight: bold !important;
+
         min-height: 60px;
+
     }
 
 
-    /* 비활성 게임판 버튼의 이모지 흐림 방지 */
+    /* =================================================
+       비활성 게임판 버튼
+       ================================================= */
+
     div.stButton > button:disabled {
+
         opacity: 1 !important;
-        color: white !important;
+
+        color: #ffffff !important;
+
     }
 
 
     div.stButton > button:disabled p {
+
         opacity: 1 !important;
-        color: white !important;
+
+        color: #ffffff !important;
+
     }
 
 
-    /* 베팅 입력창 */
-    div[data-testid="stNumberInput"] input {
-        color: white !important;
-        background-color: #222222 !important;
-        font-size: 22px !important;
-        font-weight: bold !important;
+    /* =================================================
+       안내 / 경고 / 성공 메시지의 글씨
+       ================================================= */
+
+    [data-testid="stAlert"] {
+
+        color: #ffffff !important;
+
     }
 
 
-    div[data-testid="stNumberInput"] label {
-        color: white !important;
-        font-size: 20px !important;
-        font-weight: bold !important;
+    [data-testid="stAlert"] p {
+
+        color: #ffffff !important;
+
+    }
+
+
+    /* =================================================
+       숫자 입력창의 +/- 버튼
+       ================================================= */
+
+    div[data-testid="stNumberInput"] button {
+
+        color: #ffffff !important;
+
+    }
+
+
+    /* =================================================
+       체크박스 / 라디오 등 기본 설명
+       ================================================= */
+
+    [data-testid="stCheckbox"] label,
+    [data-testid="stRadio"] label {
+
+        color: #ffffff !important;
+
     }
 
 
@@ -85,7 +183,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
 
 # =====================================================
 # Session State 초기화
