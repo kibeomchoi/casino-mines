@@ -30,160 +30,164 @@ st.markdown(
     """
     <style>
 
-    /* =================================================
-       전체 배경
-       ================================================= */
+    /* =====================================================
+       배경
+       ===================================================== */
 
     .stApp {
         background-color: #0b0b0b !important;
     }
 
 
-    /* =================================================
-       일반 텍스트
-       ================================================= */
+    /* =====================================================
+       앱 화면의 모든 기본 텍스트
+       ===================================================== */
 
-    .stMarkdown,
-    .stMarkdown p,
-    .stMarkdown span,
-    .stMarkdown div,
-    .stText,
-    label {
+    [data-testid="stAppViewContainer"] * {
+        color: #ffffff !important;
+    }
+
+
+    /* =====================================================
+       제목 - Casino Mines
+       ===================================================== */
+
+    [data-testid="stAppViewContainer"] h1,
+    [data-testid="stAppViewContainer"] h2,
+    [data-testid="stAppViewContainer"] h3,
+    [data-testid="stAppViewContainer"] h4,
+    [data-testid="stAppViewContainer"] h5,
+    [data-testid="stAppViewContainer"] h6 {
 
         color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
-    /* =================================================
-       제목
-       ================================================= */
+    /* =====================================================
+       Markdown / 일반 글씨
+       ===================================================== */
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    [data-testid="stAppViewContainer"] .stMarkdown,
+    [data-testid="stAppViewContainer"] .stMarkdown *,
+    [data-testid="stAppViewContainer"] p,
+    [data-testid="stAppViewContainer"] span {
 
         color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
-    /* =================================================
-       입력창 설명
-       ================================================= */
+    /* =====================================================
+       베팅 입력창
+       ===================================================== */
 
-    div[data-testid="stNumberInput"] label {
+    [data-testid="stNumberInput"] label,
+    [data-testid="stNumberInput"] label *,
+    [data-testid="stNumberInput"] input {
 
         color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
-    /* =================================================
-       입력창 내부 숫자
-       ================================================= */
-
-    div[data-testid="stNumberInput"] input {
-
-        color: #ffffff !important;
+    [data-testid="stNumberInput"] input {
 
         background-color: #222222 !important;
 
-        font-size: 22px !important;
-
-        font-weight: bold !important;
-
     }
 
 
-    /* =================================================
-       버튼
-       ================================================= */
+    /* =====================================================
+       버튼 글씨
+       ===================================================== */
 
-    div.stButton > button {
+    [data-testid="stButton"] button,
+    [data-testid="stButton"] button * {
 
         color: #ffffff !important;
-
-        font-size: 20px !important;
-
-        font-weight: bold !important;
-
-        min-height: 60px;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
-    /* =================================================
+    /* =====================================================
        비활성 게임판 버튼
-       ================================================= */
+       ===================================================== */
 
-    div.stButton > button:disabled {
-
-        opacity: 1 !important;
-
-        color: #ffffff !important;
-
-    }
-
-
-    div.stButton > button:disabled p {
+    [data-testid="stButton"] button:disabled,
+    [data-testid="stButton"] button:disabled * {
 
         opacity: 1 !important;
-
         color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
-    /* =================================================
-       안내 / 경고 / 성공 메시지의 글씨
-       ================================================= */
+    /* =====================================================
+       성공 / 경고 / 에러 / 정보 박스
+       ===================================================== */
 
-    [data-testid="stAlert"] {
+    [data-testid="stAlert"],
+    [data-testid="stAlert"] * {
 
         color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
-    [data-testid="stAlert"] p {
+    /* =====================================================
+       Dialog / 팝업
+       ===================================================== */
+
+    [role="dialog"],
+    [role="dialog"] * {
 
         color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
-    /* =================================================
-       숫자 입력창의 +/- 버튼
-       ================================================= */
-
-    div[data-testid="stNumberInput"] button {
+    /* 팝업 제목 */
+    [role="dialog"] h1,
+    [role="dialog"] h2,
+    [role="dialog"] h3,
+    [role="dialog"] p,
+    [role="dialog"] span {
 
         color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
-    /* =================================================
-       체크박스 / 라디오 등 기본 설명
-       ================================================= */
-
-    [data-testid="stCheckbox"] label,
-    [data-testid="stRadio"] label {
+    /* 팝업 내부 버튼 */
+    [role="dialog"] button,
+    [role="dialog"] button * {
 
         color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
+   /* =====================================================
+   팝업 배경
+   ===================================================== */
+
+[role="dialog"] {
+    background-color: #202020 !important;
+}
     </style>
     """,
     unsafe_allow_html=True
 )
-
 # =====================================================
 # Session State 초기화
 # =====================================================
