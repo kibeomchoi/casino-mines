@@ -31,7 +31,7 @@ st.markdown(
     <style>
 
     /* =====================================================
-       배경
+       전체 배경
        ===================================================== */
 
     .stApp {
@@ -40,48 +40,54 @@ st.markdown(
 
 
     /* =====================================================
-       앱 화면의 모든 기본 텍스트
-       ===================================================== */
-
-    [data-testid="stAppViewContainer"] * {
-        color: #ffffff !important;
-    }
-
-
-    /* =====================================================
-       제목 - Casino Mines
+       메인 화면 - 제목
        ===================================================== */
 
     [data-testid="stAppViewContainer"] h1,
     [data-testid="stAppViewContainer"] h2,
     [data-testid="stAppViewContainer"] h3,
-    [data-testid="stAppViewContainer"] h4,
-    [data-testid="stAppViewContainer"] h5,
-    [data-testid="stAppViewContainer"] h6 {
+    [data-testid="stAppViewContainer"] h4 {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
 
     }
 
 
     /* =====================================================
-       Markdown / 일반 글씨
+       메인 화면 - Markdown 굵은 글씨 포함
        ===================================================== */
 
     [data-testid="stAppViewContainer"] .stMarkdown,
-    [data-testid="stAppViewContainer"] .stMarkdown *,
-    [data-testid="stAppViewContainer"] p,
-    [data-testid="stAppViewContainer"] span {
+    [data-testid="stAppViewContainer"] .stMarkdown p,
+    [data-testid="stAppViewContainer"] .stMarkdown strong,
+    [data-testid="stAppViewContainer"] .stMarkdown b,
+    [data-testid="stAppViewContainer"] .stMarkdown span {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
 
     }
 
 
     /* =====================================================
-       베팅 입력창
+       메인 화면 - 일반 텍스트
+       ===================================================== */
+
+    [data-testid="stAppViewContainer"] [data-testid="stText"],
+    [data-testid="stAppViewContainer"] label {
+
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
+
+    }
+
+
+    /* =====================================================
+       메인 화면 - 베팅 입력창
        ===================================================== */
 
     [data-testid="stNumberInput"] label,
@@ -90,6 +96,7 @@ st.markdown(
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
 
     }
 
@@ -102,88 +109,129 @@ st.markdown(
 
 
     /* =====================================================
-       버튼 글씨
+       메인 화면 - 버튼
        ===================================================== */
 
-    [data-testid="stButton"] button,
-    [data-testid="stButton"] button * {
+    [data-testid="stAppViewContainer"] [data-testid="stButton"] button {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
+
+    }
+
+
+    [data-testid="stAppViewContainer"] [data-testid="stButton"] button * {
+
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
 
     }
 
 
     /* =====================================================
-       비활성 게임판 버튼
+       게임판 열린 칸
        ===================================================== */
 
-    [data-testid="stButton"] button:disabled,
+    [data-testid="stButton"] button:disabled {
+
+        opacity: 1 !important;
+
+    }
+
+
     [data-testid="stButton"] button:disabled * {
 
         opacity: 1 !important;
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
 
     }
 
 
     /* =====================================================
-       성공 / 경고 / 에러 / 정보 박스
+       알림창
        ===================================================== */
 
-    [data-testid="stAlert"],
-    [data-testid="stAlert"] * {
+    [data-testid="stAlert"] p,
+    [data-testid="stAlert"] span,
+    [data-testid="stAlert"] strong {
 
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
 
     }
 
 
     /* =====================================================
-       Dialog / 팝업
+       팝업 전체
        ===================================================== */
 
-    [role="dialog"],
-    [role="dialog"] * {
+    [role="dialog"] {
 
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
+        background-color: #eeeeee !important;
 
     }
 
 
-    /* 팝업 제목 */
+    /* =====================================================
+       팝업 글씨 - 전부 검은색
+       ===================================================== */
+
     [role="dialog"] h1,
     [role="dialog"] h2,
     [role="dialog"] h3,
+    [role="dialog"] h4,
     [role="dialog"] p,
-    [role="dialog"] span {
+    [role="dialog"] span,
+    [role="dialog"] div,
+    [role="dialog"] strong,
+    [role="dialog"] b {
 
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-
-    }
-
-
-    /* 팝업 내부 버튼 */
-    [role="dialog"] button,
-    [role="dialog"] button * {
-
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+        opacity: 1 !important;
 
     }
 
 
-   /* =====================================================
-   팝업 배경
-   ===================================================== */
+    /* =====================================================
+       팝업 버튼
+       ===================================================== */
 
-[role="dialog"] {
-    background-color: #202020 !important;
-}
+    [role="dialog"] [data-testid="stButton"] button {
+
+        background-color: #222222 !important;
+        border: 2px solid #000000 !important;
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        font-weight: bold !important;
+        opacity: 1 !important;
+
+    }
+
+
+    [role="dialog"] [data-testid="stButton"] button * {
+
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
+
+    }
+
+
+    /* =====================================================
+       팝업 닫기 X 버튼
+       ===================================================== */
+
+    [role="dialog"] button[aria-label="Close"] {
+
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+
+    }
+
+
     </style>
     """,
     unsafe_allow_html=True
@@ -341,8 +389,20 @@ def cashout_popup(reward):
 # =====================================================
 # 제목
 # =====================================================
-
-st.title(TITLE)
+st.markdown(
+    """
+    <div style="
+        color:#ffffff;
+        font-size:42px;
+        font-weight:800;
+        text-align:center;
+        margin-bottom:25px;
+    ">
+        🎰 Casino Mines
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 
 # =====================================================
@@ -404,11 +464,20 @@ if st.session_state.balance is None:
 # =====================================================
 # 현재 잔액 표시
 # =====================================================
-
-st.subheader(
-    f"💰 현재 잔액 : {st.session_state.balance}칩"
+st.markdown(
+    f"""
+    <div style="
+        color:#ffffff;
+        font-size:28px;
+        font-weight:800;
+        margin-top:10px;
+        margin-bottom:15px;
+    ">
+        💰 현재 잔액 : {st.session_state.balance}칩
+    </div>
+    """,
+    unsafe_allow_html=True
 )
-
 
 # =====================================================
 # 새로운 게임 베팅
